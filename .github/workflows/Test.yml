@@ -1,8 +1,10 @@
 name: Test
 
+
 on:
   workflow_dispatch:
     
+
 jobs:
 
   build:
@@ -11,12 +13,12 @@ jobs:
   
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
 
-    - name: Set Node.js 14.x
-      uses: actions/setup-node@v3
+    - name: Set Node.js 12.x
+      uses: actions/setup-node@v1
       with:
-        node-version: 14.x
+        node-version: 12.x
 
     - name: Install dependencies
       run: npm ci
@@ -24,23 +26,38 @@ jobs:
     - name: Compile
       run: npm run build
 
-  GetChangeDetails:
+    
+  changeApproval:
+    name: ServiceNow Change Approval
     needs: build
-    runs-on: ubuntu-latest
-    name: Servicenow Get Change Details
+    runs-on: ubutun-latest
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Servicenow Get Change Details
-        uses: ServiceNow/servicenow-devops-get-change@2.0.0
-        id: get
+    steps:     
+      - name: ServiceNow Change Approval
+        uses: ServiceNow/servicenow-devops-change@v3.1.0
+        id: create
         with:
-          devops-integration-user-name: ${{ secrets.gowthamivanguri }}
-          devops-integration-user-password: ${{ secrets.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 }}
-          instance-url: ${{ secrets.dev250872.service-now.com }}
+          devops-integration-user-name: ${{ secrets.SN_DEVOPS_USER }}
+          devops-integration-user-password: ${{ secrets.SN_DEVOPS_PASSWORD }}
+          instance-url: ${{ secrets.SN_INSTANCE_URL }}
+          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
           context-github: ${{ toJSON(github) }}
-          tool-id: ${{ secrets.'449cda0ac3011210848ff44ed4013165' }}
-          change-details: '{"pipeline_name":"maheshganji/custom-action-get/CustomActionGetWorkflow","stage_name":"ServiceNow Change Approval","build_number":"3732116819"}'
-      - name: Output of GetChangeDetails
-        run: echo "The Status of Update Change Request Details => ${{ steps.get.outputs.change-request-number }}"
+          job-name: 'ServiceNow Change Approval'
+          change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","assignment_group":"a715cd759f2002002920bde8132e7018","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
+          interval: '100'
+          timeout: '3600'
+          changeCreationTimeOut: '3600'
+          abortOnChangeCreationFailure: true
+          abortOnChangeStepTimeout: true
+      - name: Output of Change Creation
+        run: echo "change-request-number = ${{ steps.create.outputs.change-request-number }} and change-request-sys-id = ${{ steps.create.outputs.change-request-sys-id }} " >> $GITHUB_OUTPUT
+    
+  deploy:
+    name: Deploy
+    needs: changeApproval
+    runs-on: ubutun-latest
+
+    steps:     
+      - name: Run Deployment Script
+        run: echo "Deployment Finished....."
+
