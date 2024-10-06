@@ -11,19 +11,25 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Set Node.js 20.x
-      uses: actions/setup-node@v3
-      with:
-        node-version: 20.x
+      - name: Set Node.js 20.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies
+        run: |
+          # Change directory to where your package.json is located, if needed
+          # cd myapp  # Uncomment and adjust this line if package.json is in a subfolder
+          npm install
 
-    - name: Compile
-      run: npm run build
+      - name: Compile
+        run: |
+          # Change directory if needed
+          # cd myapp  # Uncomment and adjust this line if package.json is in a subfolder
+          npm run build
 
   changeApproval:
     name: ServiceNow Change Approval
