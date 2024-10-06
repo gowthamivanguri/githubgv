@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.4.0
+        uses: actions/checkout@v3.4.0  # Consider upgrading to the latest version
 
       - name: Set Node.js 20.x
         uses: actions/setup-node@v3.5.0
@@ -29,10 +29,10 @@ jobs:
         run: ls -la
 
       - name: Install dependencies
-        run: npm install  # No need to change directory if package.json is in root
+        run: npm install  # Ensure package.json is in root, or specify the correct path
 
       - name: Compile
-        run: npm run build  # No need to change directory if package.json is in root
+        run: npm run build  # Ensure package.json is in root, or specify the correct path
 
   changeApproval:
     name: ServiceNow Change Approval
@@ -71,6 +71,7 @@ jobs:
     steps:
       - name: Run Deployment Script
         run: echo "Deployment Finished....."
+
 
 
 
