@@ -11,27 +11,27 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v3.4.0  # Consider upgrading to the latest version
 
-      - name: Set Node.js 20.x
+      - name: Set Node.js Version
         uses: actions/setup-node@v3.5.0
         with:
-          node-version: 20.x
+          node-version: '20.x'  # Using single quotes to ensure proper interpretation
 
-      - name: Check Node.js version
+      - name: Verify Node.js Version
         run: node -v
 
-      - name: Check npm version
+      - name: Verify npm Version
         run: npm -v
 
-      - name: List files in current directory
+      - name: List Files in Current Directory
         run: ls -la
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm install  # Ensure package.json is in root, or specify the correct path
 
-      - name: Compile
+      - name: Compile Project
         run: npm run build  # Ensure package.json is in root, or specify the correct path
 
   changeApproval:
@@ -42,7 +42,7 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
     steps:
-      - name: ServiceNow Change Approval
+      - name: Request ServiceNow Change Approval
         uses: ServiceNow/servicenow-devops-change@v3.1.0
         id: create
         with:
@@ -51,14 +51,25 @@ jobs:
           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
           context-github: ${{ toJSON(github) }}
           job-name: 'ServiceNow Change Approval'
-          change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","assignment_group":"a715cd759f2002002920bde8132e7018","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
+          change-request: >
+            {
+              "setCloseCode": "true",
+              "attributes": {
+                "short_description": "Automated Software Deployment",
+                "description": "Automated Software Deployment.",
+                "assignment_group": "a715cd759f2002002920bde8132e7018",
+                "implementation_plan": "Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.",
+                "backout_plan": "When software fails in production, the previous software release will be re-deployed.",
+                "test_plan": "Testing if the software was successfully deployed"
+              }
+            }
           interval: '100'
           timeout: '3600'
           changeCreationTimeOut: '3600'
           abortOnChangeCreationFailure: true
           abortOnChangeStepTimeout: true
 
-      - name: Output of Change Creation
+      - name: Output Change Creation Result
         run: echo "change-request-number=${{ steps.create.outputs.change-request-number }}" >> $GITHUB_OUTPUT
 
   deploy:
@@ -69,8 +80,9 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
     steps:
-      - name: Run Deployment Script
+      - name: Execute Deployment Script
         run: echo "Deployment Finished....."
+
 
 
 
