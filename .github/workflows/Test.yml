@@ -38,7 +38,7 @@ jobs:
         with:
           devops-integration-user-name: ${{ secrets.gowthamivanguri }}
           devops-integration-user-password: ${{ secrets.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 }}
-          instance-url: ${{ secrets.https://dev250872.service-now.com }}
+          instance-url: ${{ secrets.dev250872.service-now.com }}
           context-github: ${{ toJSON(github) }}
           tool-id: ${{ secrets.449cda0ac3011210848ff44ed4013165 }}
           change-details: '{"pipeline_name":"maheshganji/custom-action-get/CustomActionGetWorkflow","stage_name":"ServiceNow Change Approval","build_number":"3732116819"}'
