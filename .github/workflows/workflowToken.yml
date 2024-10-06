@@ -7,6 +7,8 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
     steps:
     - name: Checkout
@@ -27,6 +29,8 @@ jobs:
     name: ServiceNow Change Approval
     needs: build
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
     steps:
       - name: ServiceNow Change Approval
@@ -51,6 +55,8 @@ jobs:
     name: Deploy
     needs: changeApproval
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
     steps:
       - name: Run Deployment Script
