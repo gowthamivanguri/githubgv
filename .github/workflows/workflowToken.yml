@@ -29,14 +29,10 @@ jobs:
         run: ls -la
 
       - name: Install dependencies
-        run: |
-          cd path/to/your/project  # Update this line if necessary
-          npm install
+        run: npm install  # No need to change directory if package.json is in root
 
       - name: Compile
-        run: |
-          cd path/to/your/project  # Update this line if necessary
-          npm run build
+        run: npm run build  # No need to change directory if package.json is in root
 
   changeApproval:
     name: ServiceNow Change Approval
@@ -75,6 +71,7 @@ jobs:
     steps:
       - name: Run Deployment Script
         run: echo "Deployment Finished....."
+
 
 
 
