@@ -12,16 +12,25 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.4.0  # Update to the latest version
 
       - name: Set Node.js 20.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v3.5.0  # Update to the latest version
         with:
           node-version: 20.x
 
+      - name: Check Node.js version
+        run: node -v
+
+      - name: Check npm version
+        run: npm -v
+
+      - name: List files in current directory
+        run: ls -la
+
       - name: Install dependencies
         run: |
-          # Change directory to where your package.json is located, if needed
+          # Change directory if needed
           # cd myapp  # Uncomment and adjust this line if package.json is in a subfolder
           npm install
 
@@ -67,4 +76,5 @@ jobs:
     steps:
       - name: Run Deployment Script
         run: echo "Deployment Finished....."
+
 
