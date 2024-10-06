@@ -108,6 +108,8 @@ async function doFetch({
       }
 
       let currChangeDetails = changeStatus.details;
+      console.log('\n     \x1b[1m\x1b[32m'+JSON.stringify(currChangedetails)+'\x1b[0m\x1b[0m');
+      core.setOutput("change_number", currChangeDetails.number);
       let changeState = currChangeDetails.status;
 
       /**
