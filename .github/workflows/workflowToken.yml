@@ -1,49 +1,40 @@
 name: workflowToken
 
+
 on:
   workflow_dispatch:
+    
 
 jobs:
+
   build:
     name: Build
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-
+  
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3  # Updated to the latest version
+    - name: Checkout
+      uses: actions/checkout@v3
 
-      - name: Set Node.js Version
-        uses: actions/setup-node@v3  # Updated to the latest version
-        with:
-          node-version: '20.x'  # Ensure it's using Node.js 20
+    - name: Set Node.js 14.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14.x
 
-      - name: Verify Node.js Version
-        run: node -v
+    - name: Install dependencies
+      run: npm ci
 
-      - name: Verify npm Version
-        run: npm -v
+    - name: Compile
+      run: npm run build
 
-      - name: List Files in Current Directory
-        run: ls -la
-
-      - name: Install Dependencies
-        run: npm install  # Ensure package.json is in root, or specify the correct path
-
-      - name: Compile Project
-        run: npm run build  # Ensure package.json is in root, or specify the correct path
-
+    
   changeApproval:
     name: ServiceNow Change Approval
     needs: build
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
-    steps:
-      - name: Request ServiceNow Change Approval
-        uses: ServiceNow/servicenow-devops-change@v3.1.0  # Use the correct version
+    steps:     
+      - name: ServiceNow Change Approval
+        uses: ServiceNow/servicenow-devops-change@v3.1.0
         id: create
         with:
           devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
@@ -51,37 +42,21 @@ jobs:
           tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
           context-github: ${{ toJSON(github) }}
           job-name: 'ServiceNow Change Approval'
-          change-request: >
-            {
-              "setCloseCode": "true",
-              "attributes": {
-                "short_description": "Automated Software Deployment",
-                "description": "Automated Software Deployment.",
-                "assignment_group": "a715cd759f2002002920bde8132e7018",
-                "chg_model": "Normal",  # Specify the change model name or sys ID
-                "implementation_plan": "Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.",
-                "backout_plan": "When software fails in production, the previous software release will be re-deployed.",
-                "test_plan": "Testing if the software was successfully deployed"
-              }
-            }
+          change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment","description":"Automated Software Deployment.","assignment_group":"a715cd759f2002002920bde8132e7018","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
           interval: '100'
           timeout: '3600'
           changeCreationTimeOut: '3600'
           abortOnChangeCreationFailure: true
           abortOnChangeStepTimeout: true
-
-      - name: Output Change Creation Result
-        run: echo "change-request-number=${{ steps.create.outputs.change-request-number }}" >> $GITHUB_ENV  # Updated to use environment files
-
+      - name: Output of Change Creation
+        run: echo "change-request-number = ${{ steps.create.outputs.change-request-number }}" >> $GITHUB_OUTPUT
   deploy:
     name: Deploy
     needs: changeApproval
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
 
-    steps:
-      - name: Execute Deployment Script
+    steps:     
+      - name: Run Deployment Script
         run: echo "Deployment Finished....."
 
 
