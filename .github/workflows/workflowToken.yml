@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Request ServiceNow Change Approval
-        uses: ServiceNow/servicenow-devops-change@latest  # Updated to the latest version
+        uses: ServiceNow/servicenow-devops-change@v3.1.0  # Use the correct version
         id: create
         with:
           devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
