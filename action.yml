@@ -33,6 +33,9 @@ inputs:
   change-request:
     description: 'The customized inputs to create change with the requested details.'
     required: true
+  outputs:
+    change_number:
+    description: 'ServiceNow Change Request Number'
   changeCreationTimeOut:
     description: 'The max. time in seconds to wait until change created.'
     required: false
