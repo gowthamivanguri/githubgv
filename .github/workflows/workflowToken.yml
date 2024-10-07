@@ -1,82 +1,77 @@
 name: workflowToken
-
-on:
-  workflow_dispatch:
-
+'on':
+  workflow_dispatch: null
 jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-
     steps:
       - name: Checkout
-        uses: actions/checkout@v3.4.0  # Consider upgrading to the latest version
-
+        uses: actions/checkout@v3.4.0
       - name: Set Node.js 20.x
         uses: actions/setup-node@v3.5.0
         with:
           node-version: 20.x
-
       - name: Check Node.js version
         run: node -v
-
       - name: Check npm version
         run: npm -v
-
       - name: List files in current directory
         run: ls -la
-
       - name: Install dependencies
-        run: npm install  # Ensure package.json is in root, or specify the correct path
-
+        run: npm install
       - name: Compile
-        run: npm run build  # Ensure package.json is in root, or specify the correct path
-
+        run: npm run build
   changeApproval:
     name: ServiceNow Change Approval
     needs: build
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-
     steps:
       - name: ServiceNow Change Approval
         uses: ServiceNow/servicenow-devops-change@v3.1.0
         id: create
         with:
-          devops-integration-token: ${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}
-          instance-url: ${{ secrets.SN_INSTANCE_URL }}
-          tool-id: ${{ secrets.SN_ORCHESTRATION_TOOL_ID }}
-          context-github: ${{ toJSON(github) }}
-          job-name: 'ServiceNow Change Approval'
-          change-request: '{"setCloseCode":"true","attributes":{"short_description":"Automated Software Deployment", "sysapproval_approver":[
-            {
-               "approver":"Chuck Tomasi"
-            },
-            {
-               "approver":"cab approver"
-            } ],"description":"Automated Software Deployment.","state":"-4","assignment_group":"a715cd759f2002002920bde8132e7018","chg_model":"007c4001c343101035ae3f52c1d3aeb2","close_code":"successful","close_notes":"closing change request","implementation_plan":"Software update is tested and results can be found in Test Summaries Tab; When the change is approved the implementation happens automated by the CICD pipeline within the change planned start and end time window.","backout_plan":"When software fails in production, the previous software release will be re-deployed.","test_plan":"Testing if the software was successfully deployed"}}'
+          devops-integration-token: '${{ secrets.SN_DEVOPS_INTEGRATION_TOKEN }}'
+          instance-url: '${{ secrets.SN_INSTANCE_URL }}'
+          tool-id: '${{ secrets.SN_ORCHESTRATION_TOOL_ID }}'
+          context-github: '${{ toJSON(github) }}'
+          job-name: ServiceNow Change Approval
+          change-request: >-
+            {"setCloseCode":"true","attributes":{"short_description":"Automated
+            Software Deployment", "sysapproval_approver":[ { "approver":"Chuck
+            Tomasi" }, { "approver":"cab approver" } ],"description":"Automated
+            Software
+            Deployment.","state":"-4","assignment_group":"a715cd759f2002002920bde8132e7018","chg_model":"007c4001c343101035ae3f52c1d3aeb2","close_code":"successful","close_notes":"closing
+            change request","implementation_plan":"Software update is tested and
+            results can be found in Test Summaries Tab; When the change is
+            approved the implementation happens automated by the CICD pipeline
+            within the change planned start and end time
+            window.","backout_plan":"When software fails in production, the
+            previous software release will be re-deployed.","test_plan":"Testing
+            if the software was successfully deployed"}}
           interval: '100'
           timeout: '3600'
           changeCreationTimeOut: '3600'
           abortOnChangeCreationFailure: true
           abortOnChangeStepTimeout: true
-
       - name: Output of Change Creation
-        run: echo "change-request-number=${{ steps.create.outputs.change-request-number }}" >> $GITHUB_OUTPUT
-
+        run: >-
+          echo "change-request-number=${{
+          steps.create.outputs.change-request-number }}" >> $GITHUB_OUTPUT
   deploy:
     name: Deploy
     needs: changeApproval
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
-
     steps:
       - name: Run Deployment Script
         run: echo "Deployment Finished....."
+
 
 
 
