@@ -49,7 +49,7 @@ jobs:
             approved the implementation happens automated by the CICD pipeline
             within the change planned start and end time
             window.","backout_plan":"When software fails in production, the
-            previous software release will be re-deployed.","test_plan":"Testing if the software was
+            previous software release will be re-deployed.","cmdb_ci":"ANNIE-IBM","test_plan":"Testing if the software was
             successfully deployed"}}
           interval: '100'
           timeout: '3600'
