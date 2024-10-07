@@ -42,8 +42,7 @@ jobs:
           job-name: ServiceNow Change Approval
           change-request: >-
             {"setCloseCode":"true","attributes":{"short_description":"Automated
-            Software Deployment", "sysapproval_approver":[ { "approver":"Chuck
-            Tomasi" }, { "approver":"cab approver" } ],"description":"Automated
+            Software Deployment","description":"Automated
             Software
             Deployment.","state":"-4","assignment_group":"a715cd759f2002002920bde8132e7018","chg_model":"007c4001c343101035ae3f52c1d3aeb2","close_code":"successful","close_notes":"closing
             change request","implementation_plan":"Software update is tested and
