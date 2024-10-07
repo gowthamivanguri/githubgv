@@ -42,16 +42,16 @@ jobs:
           job-name: ServiceNow Change Approval
           change-request: >-
             {"setCloseCode":"true","attributes":{"short_description":"Automated
-            Software Deployment","description":"Automated
-            Software
+            Software Deployment","description":"Automated Software
             Deployment.","state":"-5","assignment_group":"a715cd759f2002002920bde8132e7018","chg_model":"007c4001c343101035ae3f52c1d3aeb2","close_code":"successful","close_notes":"closing
             change request","implementation_plan":"Software update is tested and
             results can be found in Test Summaries Tab; When the change is
             approved the implementation happens automated by the CICD pipeline
             within the change planned start and end time
             window.","backout_plan":"When software fails in production, the
-            previous software release will be re-deployed.","task_ci":[ { "ci_item":"ANNIE-IBM" } ],"test_plan":"Testing
-            if the software was successfully deployed"}}
+            previous software release will be re-deployed.","task_ci":[ {
+            "ci_item":"ANNIE-IBM" } ],"test_plan":"Testing if the software was
+            successfully deployed"}}
           interval: '100'
           timeout: '3600'
           changeCreationTimeOut: '3600'
@@ -70,7 +70,6 @@ jobs:
     steps:
       - name: Run Deployment Script
         run: echo "Deployment Finished....."
-
 
 
 
