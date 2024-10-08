@@ -44,7 +44,7 @@ jobs:
             {"setCloseCode":"true","attributes":{"short_description":"Automated
             Software Deployment","description":"Automated Software
             Deployment.","state":"-5","assignment_group":"a715cd759f2002002920bde8132e7018","chg_model":"007c4001c343101035ae3f52c1d3aeb2","close_code":"successful","close_notes":"closing
-            change request","start_date":"2024-10-08 08:45:19","end_date":"2024-10-08 08:55:19","implementation_plan":"Software update is tested and
+            change request","start_date":"2024-10-08 08:50:19","end_date":"2024-10-08 08:55:19","implementation_plan":"Software update is tested and
             results can be found in Test Summaries Tab; When the change is
             approved the implementation happens automated by the CICD pipeline
             within the change planned start and end time
